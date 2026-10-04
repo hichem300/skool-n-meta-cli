@@ -47,6 +47,15 @@ class ConfigureRuntimeTests(unittest.TestCase):
             )
             self.assertNotIn("x-aws-waf-token", credentials["headers"])
 
+    def test_strips_cookie_name_from_skool_token(self) -> None:
+        environ = self.environ | {"SKOOL_AUTH_TOKEN": "auth_token=skool-secret"}
+        with tempfile.TemporaryDirectory() as directory:
+            _, skool_path = configure(Path(directory), environ)
+            credentials = json.loads(skool_path.read_text())
+        self.assertEqual(
+            credentials["headers"]["cookie"], "auth_token=skool-secret"
+        )
+
     def test_rejects_multiline_secret(self) -> None:
         environ = self.environ | {"ACCESS_TOKEN": "first\nsecond"}
         with self.assertRaisesRegex(ConfigurationError, "single-line"):

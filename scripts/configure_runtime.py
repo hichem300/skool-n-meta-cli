@@ -42,6 +42,12 @@ def required_values(environ: dict[str, str]) -> dict[str, str]:
     if not account_id.isdigit():
         raise ConfigurationError("AD_ACCOUNT_ID must contain only digits")
     values["AD_ACCOUNT_ID"] = account_id
+    skool_token = values["SKOOL_AUTH_TOKEN"]
+    if skool_token.startswith("auth_token="):
+        skool_token = skool_token.removeprefix("auth_token=")
+    if not skool_token:
+        raise ConfigurationError("SKOOL_AUTH_TOKEN has no token value")
+    values["SKOOL_AUTH_TOKEN"] = skool_token
     return values
 
 
