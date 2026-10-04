@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+  TARGET="$(readlink -- "$SOURCE")"
+  case "$TARGET" in
+    /*) SOURCE="$TARGET" ;;
+    *) SOURCE="$(dirname -- "$SOURCE")/$TARGET" ;;
+  esac
+done
+SCRIPT_DIR="$(cd -- "$(dirname -- "$SOURCE")" && pwd)"
+PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+DOC="$PROJECT_ROOT/docs/ads-cli-commands.md"
+
+if [ ! -f "$DOC" ]; then
+  printf 'ads-help: reference document not found: %s\n' "$DOC" >&2
+  exit 1
+fi
+
+if [ -x /snap/bin/glow ]; then
+  exec /snap/bin/glow -p "$DOC"
+elif command -v glow >/dev/null 2>&1; then
+  exec "$(command -v glow)" -p "$DOC"
+else
+  cat "$DOC"
+fi

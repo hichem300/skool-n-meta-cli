@@ -32,6 +32,12 @@ Connections ready. Both checks were read-only.
 - `meta-ads==1.1.0`, installed from PyPI.
 - `skool-data==0.1.1`, vendored under `tools/skool-cli/`.
 - Cloud credential adapter that removes HAR import from this setup flow.
+- Read-only Meta reporting commands:
+  - `./scripts/ads-today.sh`
+  - `./scripts/ad-spend.sh "DD-MM-YYYY"`
+  - `./scripts/ads-help`
+
+See [`docs/ads-cli-commands.md`](docs/ads-cli-commands.md) for command options and examples.
 
 ## Security
 
